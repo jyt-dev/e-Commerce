@@ -6,7 +6,7 @@ import { setServers } from "node:dns/promises";
 
 setServers(["1.1.1.1", "8.8.8.8"]);
 
-//dB connection function
+//dB connection function it returns a promise
 
 const connectDB = async () => {
     try {

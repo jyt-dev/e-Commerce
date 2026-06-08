@@ -1,7 +1,7 @@
 import express,{json} from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
+import 'dotenv/config'
 const app = express();
 
 app.use((req,res,next) => {
@@ -9,6 +9,7 @@ app.use((req,res,next) => {
     next();
 })
 
+//configuring our express app for req and res handling
 app.use(cors({
     origin: process.env.CORS_ORIGIN,
     credentials: true
@@ -22,5 +23,9 @@ app.use(express.urlencoded({limit: "16kb"})); // express.urlencoded() → parses
 app.use(express.static("public")); // serves static files like image
 app.use(cookieParser()); // parses cookies data
 
+
+import userRouter from "../src/routes/user.routes.js";
+
+app.use("/api/v1/users",userRouter);
 
 export {app};
