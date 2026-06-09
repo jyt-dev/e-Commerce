@@ -1,6 +1,6 @@
 # E-commerce platform
 
-## Overview
+# Overview
 
 A scalable fullstack e-Commerce platfrom consists of many unique and important features that provide seamless user experience of selling and buying products online.
 
@@ -12,28 +12,28 @@ Feauters are :
 - Payment Gateway
 
 
-## Tech Stack
+# Tech Stack
 
-# Frontend
+## Frontend
 
 - React Js
 - Tailwind CSS
 
-# Backend
+## Backend
 
 - Node.js
 - Express.js
 - MongoDB
 - Cloudinary (cloud service)
 
-## Tools
+# Tools
 
 - Git & Github
 - Vs Code
 
-## Project Structure
+# Project Structure
 
-# Sever Structure
+## Sever Structure
 
  src/
 |--- contrllers/
@@ -47,5 +47,5 @@ Feauters are :
 |--- constants.js
 
 
-# Client Structure
+## Client Structure
 
