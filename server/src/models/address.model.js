@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
-
+import mongooseAggregatePaginate from "mongoose-aggregate-paginate-v2";
 const addressSchema = new mongoose.Schema({
-    owner: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
-        required: true
+        required: true,
+        index: true
     },
     house: {
         type: String,
@@ -27,7 +28,7 @@ const addressSchema = new mongoose.Schema({
         required: true
     },
     pin: {
-        type: Number,
+        type: String,
         required: true
     },
     isDefault: {
@@ -35,9 +36,11 @@ const addressSchema = new mongoose.Schema({
         required: true
     },
     phone: {
-        type: Number,
+        type: String,
         required: true
     }
 },{timestamps: true})
+
+addressSchema.plugin(mongooseAggregatePaginate);
 
 export const Address = mongoose.model('Address',addressSchema);
