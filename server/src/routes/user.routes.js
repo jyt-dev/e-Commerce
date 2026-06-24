@@ -1,21 +1,16 @@
 import {Router} from "express";
-import { loginUser, logoutUser, refreshAccessToken, registerUser, updatePassword, updateAccountDetails, getCurrentUser } from "../controllers/user.controller.js";
+import { updatePassword, updateAccountDetails, getCurrentUser, becomeSeller } from "../controllers/user.controller.js";
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-router.route("/register").post(registerUser);
+router.use(verifyJWT);
 
-router.route("/login").post(loginUser);
+router.route("/me")
+    .get(getCurrentUser)
+    .patch(updateAccountDetails);
 
-router.route("/logout").post(verifyJWT, logoutUser);
-
-router.route("/update-account-details").patch(verifyJWT, updateAccountDetails);
-
-router.route("/update-password").patch(verifyJWT, updatePassword);
-
-router.route("/refresh-accessToken").post(refreshAccessToken);
-
-router.route("/current-user").get(verifyJWT,getCurrentUser);
+router.route("/me/password").patch(updatePassword)
+router.route("/me/role").patch(becomeSeller);
 
 export default router;
