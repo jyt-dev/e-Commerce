@@ -14,7 +14,9 @@ const productSchema = new mongoose.Schema({
     category: {
         type: String,
         // unique: true,
-        index: true
+        index: true,
+        required: true,
+        lowercase: true
     },
     price: {
         type: Number,
