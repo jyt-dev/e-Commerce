@@ -45,6 +45,12 @@ app.use("/api/v1/cart", cartRouter);
 import sellerRouter from "../src/routes/seller.routes.js";
 app.use("/api/v1/seller", sellerRouter);
 
+import orderRouter from "../src/routes/order.routes.js"
+app.use("/api/v1/order", orderRouter);
+
+import paymentRouter from "../src/routes/payment.routes.js"
+app.use("/api/v1/payment", paymentRouter);
+
 import { errorMiddleware } from "./middleware/error.middleware.js";
 app.use(errorMiddleware);
 
