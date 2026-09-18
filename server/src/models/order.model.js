@@ -27,14 +27,14 @@ const orderSchema = new mongoose.Schema({
         type: [orderItemSchema],
         required: true
     },
-    shippingAddressId: {
+    shippingAddress: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Address",
         required: true
     },
     status: {
         type : String,
-        enum : ["PENDING", "CANCELLED", "DELIVERED"],
+        enum : ["PENDING", "CANCELLED", "DELIVERED", "SHIPPED", "CONFIRMED"],
         default : "PENDING"
     },
 },{timestamps: true})
