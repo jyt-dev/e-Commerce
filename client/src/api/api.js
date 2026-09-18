@@ -1,6 +1,6 @@
 import axios from "axios"
-import {store} from "../app/store.js"
-import { resetCredentials } from "@/features/auth/authSlice.js";
+// import {store} from "../app/store.js"
+// import { resetCredentials } from "@/features/auth/authSlice.js";
 
 const api = axios.create({
   baseURL: "http://localhost:8000/api/v1",
@@ -16,6 +16,7 @@ const api = axios.create({
 //         const accessToken = 
 //     }
 // )
+function setUpInterceptors(store, resetCredentials){
 api.interceptors.response.use(
     (response) => response,
 
@@ -47,5 +48,9 @@ api.interceptors.response.use(
     return Promise.reject(error);
     }
 );
+}
 
-export default api;
+export {
+    api,
+    setUpInterceptors
+}
