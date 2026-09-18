@@ -30,7 +30,7 @@ function Login() {
           // navigate();
         } 
         else {
-          toast.error(data?.payload?.message);
+          toast.error(data?.payload?.message || "Login Failed");
         }
       })
   }
