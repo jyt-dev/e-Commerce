@@ -25,7 +25,7 @@ const initialProductState = {
   stock: 0,
   imageUrl: ""
 }
-function Products() {
+function ProductSeller() {
     const [formData, setFormData] = useState(initialProductState);
     const [selectedImages, setSelectedImages] = useState([]);
     const [isUploading, setIsUploading] = useState(false);
@@ -141,4 +141,4 @@ function Products() {
     );
 }
 
-export default Products;
+export default ProductSeller;
