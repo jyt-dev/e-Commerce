@@ -19,6 +19,7 @@ function CardHome({ src, className}) {
             width={300}
             height={256}
             loading="lazy"
+            decoding="async"
             className={`w-full  ${className ? className : 'h-48 object-cover'}`}
           />
           {/* <CardHeader>

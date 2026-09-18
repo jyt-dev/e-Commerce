@@ -17,7 +17,7 @@ function Products() {
 
     return (
         <div>
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-5">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mx-2 mt-2 sm:mt-3 sm:mx-6 bg-white border-none">
                 {productList.map((product) => (
                     <ProductCardList key={product._id} product={product} />
                 ))}

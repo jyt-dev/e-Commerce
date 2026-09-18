@@ -105,6 +105,8 @@ function Home() {
                   <img
                     src={img.src}
                     alt=""
+                    width={300} height={256}
+                    decoding="async"
                     className="w-full h-87.5 object-cover cursor-pointer"
                     fetchPriority={index === 0 ? "high" : undefined}
                     loading={index === 0 ? "eager" : "lazy"}
@@ -161,23 +163,31 @@ function Home() {
             <h2 className="ml-2 font-medium my-2">Beauty Products</h2>
             <div className="grid  grid-cols-2 gap-2 m-2">
               {beautyP.map((bt) => (
-                <CardHome key={bt.id} src={bt.src} className="h-34 rounded-none" />
+                <CardHome
+                  key={bt.id}
+                  src={bt.src}
+                  className="h-34 rounded-none"
+                />
               ))}
             </div>
           </div>
         </div>
         <div className="mx-15 my-5 cursor-pointer">
           <img
-           src="/assets/summersale.jpg"
-           alt=""
-           className="h-75 w-full rounded-xl"
+            src="/assets/summersale.webp"
+            alt=""
+            className="h-75 w-full rounded-xl"
+            loading="lazy"
+            decoding="async"
           />
         </div>
         <div className="hidden sm:block mx-2 md:mx-15 bg-linear-to-b from-lime-500 to-lime-50 border-lime-300 border my-5 rounded-xl">
-          <h3 className="my-2 font-medium ml-2">The NewYork Times Best Selling Books</h3>
+          <h3 className="my-2 font-medium ml-2">
+            The NewYork Times Best Selling Books
+          </h3>
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
             {books.map((book) => (
-              <CardHome key={book.id} src={book.src} className="object-fill"/>
+              <CardHome key={book.id} src={book.src} className="object-fill" />
             ))}
           </div>
         </div>
@@ -185,7 +195,7 @@ function Home() {
           <h3 className="my-2 font-medium ml-2">Popular picks</h3>
           <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
             {populars.map((popular) => (
-              <CardHome key={popular.id} src={popular.src}/>
+              <CardHome key={popular.id} src={popular.src} />
             ))}
           </div>
         </div>
