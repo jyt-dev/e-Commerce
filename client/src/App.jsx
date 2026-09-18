@@ -12,7 +12,7 @@ import Orders from "./pages/admin/Orders.jsx";
 import ShoppingLayout from "./components/shopping/ShoppingLayout.jsx"
 import NotFound from "./pages/error/NotFound.jsx";
 import Home from "./pages/shopping/Home.jsx";
-import ProductListing from "./pages/shopping/ProductListing.jsx";
+import Products from "./pages/shopping/Products.jsx";
 import Checkout from "./pages/shopping/Checkout.jsx";
 import Account from "./pages/shopping/Account.jsx";
 import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
@@ -23,7 +23,8 @@ import { checkAuth } from "./features/auth/authThunk.js";
 // import { Skeleton } from "@/components/ui/skeleton"
 import { SpinnerCustom } from "@/components/ui/spinner.jsx"
 import SellerLayout from "./components/seller/SellerLayout";
-import Products from "./pages/seller/Products.jsx"
+import ProductSeller from "./pages/seller/ProductSeller.jsx"
+import ProductDetail from "./pages/shopping/ProductDetail.jsx";
 
 function App() {
   const {user, isAuthenticated, isLoading} = useSelector((state) => state.auth)
@@ -44,18 +45,29 @@ function App() {
 
   return (
     <div className="flex flex-col overflow-hidden bg-white">
-      
       <Routes>
+        <Route path="/" element={<ShoppingLayout />}>
+          <Route index element={<Home />} />
+          <Route path="products" element={<Products />} />
+          <Route path="product/:productId" element={<ProductDetail/>}/>
+          <Route
+            path="checkout"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
 
-        <Route
-          path="/"
-          element={
-            <ProtectedRoute
-              isAuthenticated={isAuthenticated}
-              user={user}
-            ></ProtectedRoute>
-          }
-        />
+          <Route
+            path="account"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
+                <Account />
+              </ProtectedRoute>
+            }
+          />
+        </Route>
 
         <Route
           path="/auth"
@@ -65,7 +77,8 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="login" replace />}/>   {/*default path to parent route at "/auth"*/}
+          <Route index element={<Navigate to="login" replace />} />{" "}
+          {/*default path to parent route at "/auth"*/}
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="logout" element={<Login />} />
@@ -87,38 +100,22 @@ function App() {
         </Route>
 
         <Route
-          path="/shop"
-          element={
-            <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
-              {<ShoppingLayout />}
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Navigate to="home" replace />} />
-          <Route path="home" element={<Home />} />
-          <Route path="product" element={<ProductListing />} />
-          <Route path="checkout" element={<Checkout />} />
-          <Route path="account" element={<Account />} />
-        </Route>
-
-        <Route 
           path="/seller"
           element={
             <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
-              {<SellerLayout/>}
+              {<SellerLayout />}
             </ProtectedRoute>
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="features" element={<Features />} />
-          <Route path="products" element={<Products />} />
+          <Route path="products" element={<ProductSeller />} />
           <Route path="orders" element={<Orders />} />
         </Route>
 
         <Route path="*" element={<NotFound />} />
-        <Route path="/unauth-page" element={<UnAuthPage/>}/>
-        
+        <Route path="/unauth-page" element={<UnAuthPage />} />
       </Routes>
     </div>
   );
