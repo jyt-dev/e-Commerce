@@ -5,7 +5,7 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const addAddress = asyncHandler(async(req, res) => {
-    const {house,landmark,city,state,country,pin,phone,isDefault = false} = req.body;
+    let {house,landmark,city,state,country,pin,phone,isDefault = false} = req.body;
 
     const requiredFields = { house, landmark, city, state, country, pin, phone };
 
@@ -193,7 +193,7 @@ const getAllAddresses = asyncHandler(async(req, res) => {
             }
         },
         {
-            $unwind: $userId
+            $unwind: "$userDetails" 
         },
         {
             $project: {
