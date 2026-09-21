@@ -67,9 +67,51 @@ const checkAuth = createAsyncThunk(
         }
     }
 )
+const updateAccountDetails = createAsyncThunk(
+    "auth/updateAccountDetails",
+    async (formData, thunkAPI) => {
+        try {
+            const resp = await api.patch('/users/me', formData);
+            return resp.data;
+        } catch (error) {
+            const msg = error.response?.data || {error: error.message || "Failed to update account"};
+            return thunkAPI.rejectWithValue(msg);
+        }
+    }
+);
+
+const changePassword = createAsyncThunk(
+    "auth/changePassword",
+    async (formData, thunkAPI) => {
+        try {
+            const resp = await api.patch('/users/me/password', formData);
+            return resp.data;
+        } catch (error) {
+            const msg = error.response?.data || {error: error.message || "Failed to change password"};
+            return thunkAPI.rejectWithValue(msg);
+        }
+    }
+);
+
+const upgradeRole = createAsyncThunk(
+    "auth/upgradeRole",
+    async (_, thunkAPI) => {
+        try {
+            const resp = await api.patch('/users/me/role');
+            return resp.data;
+        } catch (error) {
+            const msg = error.response?.data || {error: error.message || "Failed to upgrade role"};
+            return thunkAPI.rejectWithValue(msg);
+        }
+    }
+);
+
 export {
     registerUser,
     loginUser,
     logoutUser,
-    checkAuth
+    checkAuth,
+    updateAccountDetails,
+    changePassword,
+    upgradeRole
 }

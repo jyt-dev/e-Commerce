@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit'
-import { checkAuth, loginUser, logoutUser, registerUser } from './authThunk';
+import { checkAuth, loginUser, logoutUser, registerUser, updateAccountDetails, changePassword, upgradeRole } from './authThunk';
 
 
 const initialState = {
@@ -84,6 +84,44 @@ export const authSlice = createSlice({
                 state.user = null;
                 state.error = action.payload;
             })
+            // Update Account Details
+            .addCase(updateAccountDetails.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(updateAccountDetails.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload.data;
+            })
+            .addCase(updateAccountDetails.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+            // Change Password (doesn't typically update user state, just shows success)
+            .addCase(changePassword.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(changePassword.fulfilled, (state) => {
+                state.isLoading = false;
+            })
+            .addCase(changePassword.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            })
+            // Upgrade Role
+            .addCase(upgradeRole.pending, (state) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(upgradeRole.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.user = action.payload.data; // Assuming it returns updated user
+            })
+            .addCase(upgradeRole.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.payload;
+            });
     }
 })
 
