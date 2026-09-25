@@ -143,42 +143,64 @@ const getProducts = asyncHandler(async (req, res) => {
         ? sortBy
         : "createdAt";
 
-    const matchStage = {};
+    const pipeline = [];
 
-    if (query) {
-        const safeQuery = escapeRegex(query.trim());
+    // --- Search stage: only added if there's an actual query ---
+    if (query && query.trim()) {
+        const trimmedQuery = query.trim();
 
-        if (safeQuery.length > 100) {
+        if (trimmedQuery.length > 100) {
             throw new ApiError(400, "Search query too long");
         }
 
-        const wordBoundaryRegex = `\\b${safeQuery}\\b`;
-
-        matchStage.$or = [
-            {
-                name: {
-                    $regex: wordBoundaryRegex,
-                    $options: "i"
-                }
-            },
-            {
-                description: {
-                    $regex: wordBoundaryRegex,
-                    $options: "i"
+        const searchStage = {
+            $search: {
+                index: "atlasSearchProducts",
+                compound: {
+                    should: [
+                        {
+                            text: {
+                                query: trimmedQuery,
+                                path: "name",
+                                score: { boost: { value: 3 } } // name matches rank higher
+                            }
+                        },
+                        {
+                            autocomplete: {
+                                query: trimmedQuery,
+                                path: "name",
+                                score: { boost: { value: 2 } }
+                            }
+                        },
+                        {
+                            text: {
+                                query: trimmedQuery,
+                                path: "description"
+                            }
+                        }
+                    ],
+                    minimumShouldMatch: 1
                 }
             }
-        ];
+        };
+
+        pipeline.push(searchStage);
+
+        // capture relevance score before later stages drop it
+        pipeline.push({
+            $addFields: { searchScore: { $meta: "searchScore" } }
+        });
     }
 
-    if (category) {
-        matchStage.category = category;
+    // --- Category filter (exact match, safe) ---
+    if (category && typeof category === "string") {
+        pipeline.push({
+            $match: { category: category }
+        });
     }
 
-    const aggregate = Product.aggregate([
-        {
-            $match: matchStage
-        },
-
+    // --- Existing lookups, unchanged ---
+    pipeline.push(
         {
             $lookup: {
                 from: "productimages",
@@ -187,8 +209,6 @@ const getProducts = asyncHandler(async (req, res) => {
                 as: "images"
             }
         },
-
-        // Get reviews for each product
         {
             $lookup: {
                 from: "reviews",
@@ -197,24 +217,14 @@ const getProducts = asyncHandler(async (req, res) => {
                 as: "reviews"
             }
         },
-
-        // Calculate review statistics
         {
             $addFields: {
                 rating: {
-                    $ifNull: [
-                        { $avg: "$reviews.rating" },
-                        0
-                    ]
+                    $ifNull: [{ $avg: "$reviews.rating" }, 0]
                 },
-
-                reviewCount: {
-                    $size: "$reviews"
-                }
+                reviewCount: { $size: "$reviews" }
             }
         },
-
-        // Remove reviews array because we only need summary here
         {
             $project: {
                 name: 1,
@@ -222,13 +232,9 @@ const getProducts = asyncHandler(async (req, res) => {
                 category: 1,
                 price: 1,
                 stock: 1,
-
-                rating: {
-                    $round: ["$rating", 1]
-                },
-
+                rating: { $round: ["$rating", 1] },
                 reviewCount: 1,
-
+                searchScore: 1,
                 images: {
                     $map: {
                         input: "$images",
@@ -237,34 +243,30 @@ const getProducts = asyncHandler(async (req, res) => {
                     }
                 }
             }
-        },
-
-        {
-            $sort: {
-                [sortField]: sortType === "asc" ? 1 : -1
-            }
         }
-    ]);
+    );
+
+    // --- Sort: relevance if searching, otherwise the requested field ---
+    if (query && query.trim()) {
+        pipeline.push({ $sort: { searchScore: -1 } });
+    } else {
+        pipeline.push({
+            $sort: { [sortField]: sortType === "asc" ? 1 : -1 }
+        });
+    }
+
+    const aggregate = Product.aggregate(pipeline);
 
     const options = {
-        page: Number(page),
-        limit: Math.min(Number(limit) || 30, 100)
+        page: Math.max(Number(page) || 1, 1),
+        limit: Math.min(Math.max(Number(limit) || 30, 1), 100)
     };
 
-    const products = await Product.aggregatePaginate(
-        aggregate,
-        options
-    );
+    const products = await Product.aggregatePaginate(aggregate, options);
 
     return res
         .status(200)
-        .json(
-            new ApiResponse(
-                200,
-                products,
-                "Products fetched successfully"
-            )
-        );
+        .json(new ApiResponse(200, products, "Products fetched successfully"));
 });
 
 const getProductById = asyncHandler(async(req, res) => {
