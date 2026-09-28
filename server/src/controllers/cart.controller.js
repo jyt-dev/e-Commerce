@@ -4,6 +4,8 @@ import { ApiError } from "../utils/apiError.js";
 import { Product } from "../models/product.model.js";
 import { Cart } from "../models/cart.model.js";
 import { ApiResponse } from "../utils/apiResponse.js";
+import { ProductImage } from "../models/productImage.model.js";
+
 
 const addtoCart = asyncHandler(async(req, res) => {
     const customerId = req.user._id;
@@ -85,22 +87,37 @@ const addtoCart = asyncHandler(async(req, res) => {
             .json(new ApiResponse(200, cart, "Products added to cart successfully"))
 })
 
-const getCart = asyncHandler(async(req, res) => {
+const getCart = asyncHandler(async (req, res) => {
     const customerId = req.user._id;
-   
-    const cart = await Cart.findOne({customer: customerId});
 
-    if(!cart){
+    const cart = await Cart.findOne({ customer: customerId });
+
+    if (!cart) {
         throw new ApiError(404, "Something went wrong");
     }
-    
-    await cart.populate("items.productId", "name description price -_id");
+
+    await cart.populate("items.productId", "name description price stock");
+
+    const productIds = cart.items.map(item => item.productId._id);
+    const images = await ProductImage.find({ productId: { $in: productIds } });
+
+    const cartObj = cart.toObject();
+    cartObj.items = cartObj.items.map(item => ({
+        ...item,
+        productId: {
+            ...item.productId,
+            images: images
+                .filter(img => img.productId.toString() === item.productId._id.toString())
+                .map(img => img.imageUrl)
+        }
+    }));
+    console.log("Cart items with images:", JSON.stringify(cartObj.items, null, 2));
 
     return res
-            .status(200)
-            .json(new ApiResponse(200, cart, "Cart fetched successfully"));
+        .status(200)
+        .json(new ApiResponse(200, cartObj, "Cart fetched successfully"));
+});
 
-})
 
 const removeProduct = asyncHandler(async (req, res) => {
     const customerId = req.user._id;

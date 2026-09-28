@@ -19,7 +19,10 @@ app.use(cors({
 }))
 
 //body parsing
-app.use(express.json({limit: "16kb"})); // express.json() → parses JSON body and payload limit is 16kb
+app.use(express.json({
+  limit: "16kb",
+  verify: (req, res, buf) => { req.rawBody = buf.toString(); }
+})); // express.json() → parses JSON body and payload limit is 16kb
 app.use(express.urlencoded({limit: "16kb"})); // express.urlencoded() → parses form data 
 
 
