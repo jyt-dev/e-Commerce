@@ -5,7 +5,7 @@ import { addProduct, deleteProduct, getProductsBySeller } from "../controllers/p
 
 const router = Router();
 
-// router.use(verifyJWT);
+router.use(verifyJWT);
 
 router.route("/products/add").post(
     upload.array("productImages", 5),
