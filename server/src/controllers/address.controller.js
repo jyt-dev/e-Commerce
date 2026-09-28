@@ -5,9 +5,9 @@ import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
 const addAddress = asyncHandler(async(req, res) => {
-    let {house,landmark,city,state,country,pin,phone,isDefault = false} = req.body;
+    let {name,house,landmark,city,state,country,pin,phone,isDefault = false} = req.body;
 
-    const requiredFields = { house, landmark, city, state, country, pin, phone };
+    const requiredFields = { name, house, landmark, city, state, country, pin, phone };
 
     // 2. Loop through and safely check each field
     for (const [key, value] of Object.entries(requiredFields)) {
@@ -37,6 +37,7 @@ const addAddress = asyncHandler(async(req, res) => {
     }
     const address = await Address.create({
         userId: req.user._id,
+        name: name.trim(),
         house: house.trim(),
         landmark: landmark.trim(),
         city: city.trim(),
@@ -117,9 +118,9 @@ const updateAddress = asyncHandler(async(req, res) => {
         throw new ApiError(403, "Unauthorized request");
     }
 
-    const {house,landmark,city,state,country,pin,phone,isDefault} = req.body;
+    const {name,house,landmark,city,state,country,pin,phone,isDefault} = req.body;
 
-    const fields = [house, landmark, city, state, country, pin, phone];
+    const fields = [name, house, landmark, city, state, country, pin, phone];
     const hasAtLeastOneField = fields.some(field => {
         if (field === undefined || field === null) return false;
         return String(field).trim() !== "";
@@ -131,6 +132,7 @@ const updateAddress = asyncHandler(async(req, res) => {
 
     const updateFields = {};
 
+    if(name !== undefined && name !== null) updateFields.name = name.trim();
     if(house !== undefined && house !== null) updateFields.house = house.trim();
     if(landmark !== undefined && landmark !== null) updateFields.landmark = landmark.trim();
     if(city !== undefined && city !== null) updateFields.city = city.trim();
@@ -197,6 +199,7 @@ const getAllAddresses = asyncHandler(async(req, res) => {
         },
         {
             $project: {
+                name: 1,
                 house: 1,
                 landmark: 1,
                 city: 1,
