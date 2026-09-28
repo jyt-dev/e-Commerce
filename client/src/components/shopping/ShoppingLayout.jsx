@@ -10,7 +10,7 @@ function ShoppingLayout() {
         <div className="flex flex-col min-h-screen bg-white">
             <Header/>
             <div className="flex flex-1 w-full">
-                {showSidebar && <Sidebar/>}
+                {showSidebar && <Sidebar className="hidden sm:flex sm:w-64" />}
                 <main className="flex flex-1 flex-col w-full">
                     <Outlet/>
                 </main>

@@ -7,16 +7,15 @@ import {
 } from "@/components/ui/carousel"
 import { useState } from "react"
 import Autoplay from "embla-carousel-autoplay"
+import { Link } from "react-router-dom"
+import { CircleUserRound, Package, Heart, Gift, Headset, Store, MapPinned } from "lucide-react"
 import CardHome from "./extras/CardHome.jsx";
-
-
 const corouselImages = [
-  { id: "img1", src: "/assets/crousal/img1.webp" }, 
-  { id: "img2", src: "/assets/crousal/img2.webp" },
-  { id: "img3", src: "/assets/crousal/img3.webp" },
-  { id: "img4", src: "/assets/crousal/img4.webp" },
-  { id: "img5", src: "/assets/crousal/img5.webp" },
-  { id: "img6", src: "/assets/crousal/img6.webp" }
+  { id: "banner_1", src: "/assets/crousal/banner_1.jpg" }, 
+  { id: "banner_2", src: "/assets/crousal/banner_2.jpg" },
+  { id: "banner_3", src: "/assets/crousal/banner_3.jpg" },
+  { id: "banner_4", src: "/assets/crousal/banner_4.jpg" },
+  { id: "banner_5", src: "/assets/crousal/banner_5.jpg" }
 ];
 
 const shopPhones = [
@@ -90,10 +89,11 @@ function Home() {
     ])
 
     return (
-      <div>
-        <div>
+      <div className="min-h-screen bg-gray-50/50 pb-10">
+        {/* Hero Carousel */}
+        <div className="mb-10 shadow-sm">
           <Carousel
-            className="mx-0 mt-0"
+            className="w-full"
             plugins={plugin}
             opts={{
               loop: true,
@@ -104,101 +104,131 @@ function Home() {
                 <CarouselItem key={img.id}>
                   <img
                     src={img.src}
-                    alt=""
-                    width={300} height={256}
+                    alt="Hero Banner"
                     decoding="async"
-                    className="w-full h-87.5 object-cover cursor-pointer"
+                    className="w-full h-[250px] sm:h-[350px] md:h-[450px] lg:h-[500px] object-cover cursor-pointer"
                     fetchPriority={index === 0 ? "high" : undefined}
                     loading={index === 0 ? "eager" : "lazy"}
                   />
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-2 text-3xl bg-transparent hover:bg-transparent cursor-pointer" />
-            <CarouselNext className="right-2 bg-transparent hover:bg-transparent cursor-pointer" />
+            <CarouselPrevious className="left-4 h-10 w-10 text-gray-800 bg-white/80 hover:bg-white border-none shadow-md cursor-pointer hidden md:flex" />
+            <CarouselNext className="right-4 h-10 w-10 text-gray-800 bg-white/80 hover:bg-white border-none shadow-md cursor-pointer hidden md:flex" />
           </Carousel>
         </div>
-        <div className="hidden sm:block mx-2 md:mx-15 bg-linear-to-b from-lime-500 to-lime-50 border-lime-300 border my-5 rounded-xl">
-          <h3 className="my-2 font-medium ml-2">Smartphones top picks</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
+
+
+
+        {/* Smartphones Section */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Smartphones Top Picks</h3>
+            <a href="#" className="text-sm font-medium text-primary hover:underline transition-all">View All &rarr;</a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {shopPhones.map((phone) => (
               <CardHome key={phone.id} src={phone.src} />
             ))}
           </div>
-        </div>
-        <div className="hidden sm:block sm:mx-2 md:mx-15  sm:bg-linear-to-b from-lime-500 to-lime-50 border-lime-300 border my-5 rounded-xl">
-          <h3 className="my-2 font-medium ml-2">Trending outfits</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
+        </section>
+
+        {/* Trending Outfits Section */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Trending Outfits</h3>
+            <a href="#" className="text-sm font-medium text-primary hover:underline transition-all">View All &rarr;</a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {trendingOutfits.map((tr) => (
               <CardHome key={tr.id} src={tr.src} />
             ))}
           </div>
-        </div>
-        <div className="md:mx-15 grid grid-cols-4 gap-1 bg-gray-200">
-          <div className="border bg-white">
-            <h2 className="ml-2 font-medium my-2">Toys </h2>
-            <div className="grid  grid-cols-2 gap-2 m-2">
+        </section>
+
+        {/* Categorized 4-Grid Block */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-lg text-gray-800">Toys & Games</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               {toys.map((toy) => (
-                <CardHome key={toy.id} src={toy.src} className="h-34" />
+                <CardHome key={toy.id} src={toy.src} className="h-28 rounded-lg" />
               ))}
             </div>
           </div>
-          <div className="border bg-white">
-            <h2 className="ml-2 font-medium my-2">Shop for travelling </h2>
-            <div className="grid  grid-cols-2 gap-2 m-2">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-lg text-gray-800">Travel Gear</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               {travel.map((tr) => (
-                <CardHome key={tr.id} src={tr.src} className="h-34" />
+                <CardHome key={tr.id} src={tr.src} className="h-28 rounded-lg" />
               ))}
             </div>
           </div>
-          <div className="border bg-white">
-            <h2 className="ml-2 font-medium my-2">College Essentials </h2>
-            <div className="grid  grid-cols-2 gap-2 m-2">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-lg text-gray-800">College Essentials</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               {clgEssentials.map((clg) => (
-                <CardHome key={clg.id} src={clg.src} className="h-34" />
+                <CardHome key={clg.id} src={clg.src} className="h-28 rounded-lg" />
               ))}
             </div>
           </div>
-          <div className="border bg-white">
-            <h2 className="ml-2 font-medium my-2">Beauty Products</h2>
-            <div className="grid  grid-cols-2 gap-2 m-2">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-bold text-lg text-gray-800">Beauty Products</h2>
+            </div>
+            <div className="grid grid-cols-2 gap-3">
               {beautyP.map((bt) => (
-                <CardHome
-                  key={bt.id}
-                  src={bt.src}
-                  className="h-34 rounded-none"
-                />
+                <CardHome key={bt.id} src={bt.src} className="h-28 rounded-lg" />
               ))}
             </div>
           </div>
-        </div>
-        <div className="mx-15 my-5 cursor-pointer">
-          <img
-            src="/assets/summersale.webp"
-            alt=""
-            className="h-75 w-full rounded-xl"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div className="hidden sm:block mx-2 md:mx-15 bg-linear-to-b from-lime-500 to-lime-50 border-lime-300 border my-5 rounded-xl">
-          <h3 className="my-2 font-medium ml-2">
-            The NewYork Times Best Selling Books
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
+        </section>
+
+        {/* Promotional Banner */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12">
+          <div className="relative group cursor-pointer overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300">
+            <img
+              src="/assets/summersale.webp"
+              alt="Summer Sale"
+              className="w-full h-32 sm:h-48 md:h-72 object-cover group-hover:scale-[1.02] transition-transform duration-700"
+              loading="lazy"
+              decoding="async"
+            />
+            <div className="absolute inset-0 bg-black/5 group-hover:bg-transparent transition-colors duration-300" />
+          </div>
+        </section>
+
+        {/* Best Selling Books Section */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">NYT Best Selling Books</h3>
+            <a href="#" className="text-sm font-medium text-primary hover:underline transition-all">Explore Books &rarr;</a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {books.map((book) => (
-              <CardHome key={book.id} src={book.src} className="object-fill" />
+              <CardHome key={book.id} src={book.src} className="h-48 md:h-64 object-cover" />
             ))}
           </div>
-        </div>
-        <div className="hidden sm:block mx-2 md:mx-15 bg-linear-to-b from-lime-500 to-lime-50 border-lime-300 border my-5 rounded-xl">
-          <h3 className="my-2 font-medium ml-2">Popular picks</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 m-2">
+        </section>
+
+        {/* Popular Picks Section */}
+        <section className="mx-4 md:mx-10 lg:mx-15 mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h3 className="text-xl md:text-2xl font-bold text-gray-900 tracking-tight">Popular Picks</h3>
+            <a href="#" className="text-sm font-medium text-primary hover:underline transition-all">View All &rarr;</a>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {populars.map((popular) => (
               <CardHome key={popular.id} src={popular.src} />
             ))}
           </div>
-        </div>
+        </section>
       </div>
     );
 }

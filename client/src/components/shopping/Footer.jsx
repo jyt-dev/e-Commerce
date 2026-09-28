@@ -67,7 +67,7 @@ function Footer() {
             Mail Us:
           </h2>
           <p className="text-gray-300 leading-relaxed">
-            ShopGram PVT LTD,
+            SynXShop PVT LTD,
             <br />
             Tech & IT Park
             <br />
@@ -111,7 +111,7 @@ function Footer() {
             <span>Help Center</span>
           </div>
         </div>
-        <div>© 2007-{new Date().getFullYear()} ShopGram.com</div>
+        <div>© 2007-{new Date().getFullYear()} SynXShop.com</div>
       </div>
     </footer>
   );

@@ -5,6 +5,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
     productList: [],
+    pagination: null,
     isLoading: false,
     selectedProduct: null,
     error: null
@@ -17,8 +18,6 @@ export const getProducts = createAsyncThunk(
             const resp = await api.get('/shop/products', { params }); //http://localhost:8000/api/v1/shop/products?query=shirt
             console.log("Response", resp);
             console.log("Response.data", resp.data);
-            // console.log("Response.data.payload".resp.data.payload);
-            // console.log("Response.data.data.docs",resp.data.data.docs);
             
             return resp.data;
 
@@ -54,13 +53,13 @@ export const productSlice = createSlice({
             })
             .addCase(getProducts.fulfilled, (state, action) => {
                 state.isLoading = false;
-                console.log(action.payload);
-                console.log(action.payload.data);
-                console.log(action.payload.data.docs);
-
                 state.productList = action.payload.data?.docs || [];
+                
+                // Extract pagination fields
+                const { totalDocs, limit, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage } = action.payload.data || {};
+                state.pagination = { totalDocs, limit, totalPages, page, hasPrevPage, hasNextPage, prevPage, nextPage };
+                
                 state.error = null;
-
             })
             .addCase(getProducts.rejected, (state, action) => {
                 state.isLoading = false;

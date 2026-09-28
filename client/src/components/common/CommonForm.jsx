@@ -10,7 +10,8 @@ function CommonForm({
     formData,
     setFormData,
     buttonText,
-    isBtnDisabled
+    isBtnDisabled,
+    buttonClassName
 }) {
 
     function renderInputsByComponentType(controlItem) {
@@ -107,10 +108,10 @@ function CommonForm({
                     )
                 }
             </div> 
-            <div className="flex justify-center">
-            <Button disabled={isBtnDisabled} className="mt-2 w-fit">
-                {buttonText || 'Submit'}
-            </Button>
+            <div className="flex justify-center mt-4">
+              <Button disabled={isBtnDisabled} className={buttonClassName || "w-fit"}>
+                  {buttonText || 'Submit'}
+              </Button>
             </div>
         </form>
      );

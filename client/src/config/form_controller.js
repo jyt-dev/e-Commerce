@@ -1,5 +1,12 @@
 const registerFormControls = [
 {
+    name: 'fullName',
+    label: 'Name',
+    placeholder: 'Enter your name',
+    componentType: 'input',
+    type: 'text'
+},
+{
     name: 'username',
     label: 'Username',
     placeholder: 'Enter your username',
