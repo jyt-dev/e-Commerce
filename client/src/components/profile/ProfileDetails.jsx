@@ -46,42 +46,42 @@ export default function ProfileDetails() {
 
     return (
         <div className="space-y-6">
-            <Card>
-                <CardHeader>
-                    <CardTitle>Account Details</CardTitle>
-                    <CardDescription>Update your personal information here.</CardDescription>
+            <Card className="rounded-sm shadow-none border-gray-200">
+                <CardHeader className="px-6 py-5 border-b border-gray-100">
+                    <CardTitle className="text-[18px] font-semibold tracking-tight text-gray-900">Account Details</CardTitle>
+                    <CardDescription className="text-[13px] text-gray-500 mt-1">Update your personal information here.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleAccountSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="fullName">Name</Label>
-                            <Input id="fullName" value={accountData.fullName} onChange={e => setAccountData({...accountData, fullName: e.target.value})} />
+                            <Label htmlFor="fullName" className="text-[13px] font-medium text-gray-700">Name</Label>
+                            <Input id="fullName" className="rounded-sm h-10 text-[14px]" value={accountData.fullName} onChange={e => setAccountData({...accountData, fullName: e.target.value})} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input id="email" type="email" value={accountData.email} onChange={e => setAccountData({...accountData, email: e.target.value})} />
+                            <Label htmlFor="email" className="text-[13px] font-medium text-gray-700">Email</Label>
+                            <Input id="email" type="email" className="rounded-sm h-10 text-[14px]" value={accountData.email} onChange={e => setAccountData({...accountData, email: e.target.value})} />
                         </div>
-                        <Button type="submit" disabled={isLoading}>Save Changes</Button>
+                        <Button type="submit" disabled={isLoading} className="rounded-sm h-10 px-6 font-medium text-[14px]">Save Changes</Button>
                     </form>
                 </CardContent>
             </Card>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Change Password</CardTitle>
-                    <CardDescription>Update your password.</CardDescription>
+            <Card className="rounded-sm shadow-none border-gray-200">
+                <CardHeader className="px-6 py-5 border-b border-gray-100">
+                    <CardTitle className="text-[18px] font-semibold tracking-tight text-gray-900">Change Password</CardTitle>
+                    <CardDescription className="text-[13px] text-gray-500 mt-1">Update your password.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handlePasswordSubmit} className="space-y-4">
                         <div className="space-y-2">
-                            <Label htmlFor="oldPassword">Old Password</Label>
-                            <Input id="oldPassword" type="password" value={passwordData.oldPassword} onChange={e => setPasswordData({...passwordData, oldPassword: e.target.value})} />
+                            <Label htmlFor="oldPassword" className="text-[13px] font-medium text-gray-700">Old Password</Label>
+                            <Input id="oldPassword" type="password" className="rounded-sm h-10 text-[14px]" value={passwordData.oldPassword} onChange={e => setPasswordData({...passwordData, oldPassword: e.target.value})} />
                         </div>
                         <div className="space-y-2">
-                            <Label htmlFor="newPassword">New Password</Label>
-                            <Input id="newPassword" type="password" value={passwordData.newPassword} onChange={e => setPasswordData({...passwordData, newPassword: e.target.value})} />
+                            <Label htmlFor="newPassword" className="text-[13px] font-medium text-gray-700">New Password</Label>
+                            <Input id="newPassword" type="password" className="rounded-sm h-10 text-[14px]" value={passwordData.newPassword} onChange={e => setPasswordData({...passwordData, newPassword: e.target.value})} />
                         </div>
-                        <Button type="submit" disabled={isLoading}>Change Password</Button>
+                        <Button type="submit" disabled={isLoading} className="rounded-sm h-10 px-6 font-medium text-[14px]">Change Password</Button>
                     </form>
                 </CardContent>
             </Card>

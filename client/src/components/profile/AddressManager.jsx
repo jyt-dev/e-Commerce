@@ -9,6 +9,7 @@ import { SpinnerCustom } from '@/components/ui/spinner';
 import { MapPin, Pencil, Trash2, Plus, X, Home, Star } from 'lucide-react';
 
 const EMPTY_FORM = {
+    name: '',
     house: '',
     landmark: '',
     city: '',
@@ -33,6 +34,11 @@ function AddressForm({ formData, onChange, onSubmit, onCancel, isLoading, isEdit
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="sm:col-span-2 space-y-1">
+                    <Label htmlFor="name" className="text-xs font-medium text-gray-600">Full Name *</Label>
+                    <Input id="name" name="name" required placeholder="e.g. John Doe" value={formData.name} onChange={onChange} className="rounded-none text-sm" />
+                </div>
+
                 <div className="sm:col-span-2 space-y-1">
                     <Label htmlFor="house" className="text-xs font-medium text-gray-600">House / Flat / Building *</Label>
                     <Input id="house" name="house" required placeholder="e.g. 42B, Sunrise Apartments" value={formData.house} onChange={onChange} className="rounded-none text-sm" />
@@ -103,6 +109,7 @@ export default function AddressManager() {
 
     const openEdit = (address) => {
         setFormData({
+            name: address.name || '',
             house: address.house || '',
             landmark: address.landmark || '',
             city: address.city || '',
@@ -212,6 +219,7 @@ export default function AddressManager() {
                                                         <Star className="h-3 w-3" /> Default
                                                     </span>
                                                 )}
+                                                <p className="text-sm font-semibold text-gray-900">{address.name}</p>
                                                 <p className="text-sm font-medium text-gray-800">{address.house}</p>
                                                 <p className="text-sm text-gray-600">{address.landmark}</p>
                                                 <p className="text-sm text-gray-600">{address.city}, {address.state}, {address.country} — {address.pin}</p>
