@@ -56,11 +56,16 @@ const createPaymentOrder = asyncHandler(async (req, res) => {
         );
     }
 
-    const razorpayOrder = await createRazorpayOrder({
-        amount: order.totalAmount * 100,
-        currency: "INR",
-        receipt: order._id.toString()
-    });
+    let razorpayOrder;
+    try {
+        razorpayOrder = await createRazorpayOrder({
+            amount: order.totalAmount * 100,
+            currency: "INR",
+            receipt: order._id.toString()
+        });
+    } catch (error) {
+        throw new ApiError(500, "Razorpay API Error: " + (error.error?.description || error.message || "Invalid or missing keys"));
+    }
 
 
     payment.gatewayOrderId = razorpayOrder.id;
