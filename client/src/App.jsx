@@ -4,7 +4,7 @@ import {Route, Routes, Navigate} from "react-router-dom"
 import AuthLayout from "./components/auth/AuthLayout.jsx";
 import Login from "./pages/auth/Login.jsx";
 import Register from "./pages/auth/Register.jsx";
-import AdminLayout from "./components/admin/adminLayout.jsx";
+import AdminLayout from "./components/admin/AdminLayout.jsx";
 import Dashboard from "./pages/admin/Dashboard.jsx";
 import Features from "./pages/admin/Features.jsx";
 // import Products from "./pages/admin/Products.jsx";
