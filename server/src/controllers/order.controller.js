@@ -88,9 +88,7 @@ const createOrder = asyncHandler(async (req, res) => {
             );
         }
 
-        // Empty the cart now that the order exists
-        cart.items = [];
-        await cart.save({ session });
+        // Cart will be emptied upon successful payment verification.
 
         await session.commitTransaction();
 
