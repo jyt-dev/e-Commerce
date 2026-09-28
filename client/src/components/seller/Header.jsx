@@ -28,9 +28,9 @@ function Header({ setOpen }) {
   const navigate = useNavigate();
 
   return (
-    <header className="flex shrink-0 items-center justify-between p-1 bg-amber-50">
-      <Button onClick={() => setOpen(true)} className="lg:hidden sm:block bg-green-300">
-        <Menu className="text-black"/>
+    <header className="flex shrink-0 items-center justify-between px-4 py-3 bg-white border-b border-gray-200">
+      <Button variant="outline" size="icon" onClick={() => setOpen(true)} className="lg:hidden">
+        <Menu className="h-5 w-5" />
         <span className="sr-only">Toggle Menu</span>
       </Button>
       <div className="flex flex-1 justify-end">

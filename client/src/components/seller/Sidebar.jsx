@@ -3,6 +3,7 @@ import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { LayoutGrid } from 'lucide-react';
 // import logoPng from "../../assets/logo.png"
+import synxshopLogo from "../../assets/synxshop-logo.svg"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "../ui/sheet";
 
 const sidebarMenuItems = [
@@ -83,7 +84,7 @@ function MenuItems({ setOpen }) {
                 <div className="flex flex-col gap-1">
                     {group.items.map((menuItem) => (
                         <div
-                            className='flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-muted-foreground hover:bg-green-300 hover:text-foreground text-[14px] transition-colors'
+                            className='flex cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-muted-foreground hover:bg-teal-50 hover:text-teal-700 text-[14px] font-medium transition-colors'
                             key={menuItem.id}
                             onClick={() => {
                                 navigate(menuItem.path);
@@ -115,7 +116,9 @@ function Sidebar({ open, setOpen }) {
               <SheetHeader className="border-b">
                 {/* The asChild prop stops the duplicate nested heading tags */}
                 <SheetTitle asChild className="flex gap-2 mt-5 mb-5">
-                  <h1 className="text-xl font-bold">ShopGram</h1>
+                  <h1 className="text-xl font-bold">
+                    <img src={synxshopLogo} className="h-7 w-auto" alt="SynXShop" />
+                  </h1>
                 </SheetTitle>
               </SheetHeader>
               <div className="flex-1 px-6 py-4 overflow-y-auto">
@@ -126,7 +129,7 @@ function Sidebar({ open, setOpen }) {
           </SheetContent>
         </Sheet>
       </div>
-      <aside className="hidden w-48 h-full shrink-0 flex-col border-r bg-background p-6 lg:flex border-amber-600 overflow-y-auto">
+      <aside className="hidden w-48 h-full shrink-0 flex-col border-r bg-white p-6 lg:flex overflow-y-auto">
         <div
           onClick={() => navigate("/seller/dashboard")}
           className="flex items-center justify-center cursor-pointer gap-2 pr-3"
@@ -136,7 +139,7 @@ function Sidebar({ open, setOpen }) {
             alt="Shoppingram Logo" 
             className="h-12 w-auto object-contain pb-1" 
           /> */}
-          <h1 className="text-xl font-bold">ShopGram</h1>
+          <img src={synxshopLogo} className="h-7 w-auto" alt="SynXShop" />
         </div>
         {/* <h3 className='text-center mb-0'>Menu</h3> */}
         <MenuItems />

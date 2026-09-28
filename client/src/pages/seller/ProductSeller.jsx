@@ -19,7 +19,7 @@ import { useSearchParams } from "react-router-dom";
 
 const initialProductState = {
   name: "",
-  descroption: "",
+  description: "",
   category: "",
   price: 0,
   stock: 0,
@@ -100,7 +100,7 @@ function ProductSeller() {
           <h1 className="text-xl">Products</h1>
 
           <Button
-           onClick={handleOpenDialog} className="font-normal text-black text-[12px] bg-green-300 rounded-full" 
+           onClick={handleOpenDialog} className="font-medium text-white text-[13px] bg-teal-600 hover:bg-teal-700 rounded-full px-5 shadow-sm transition-colors" 
            >
             Add Product
             </Button>
