@@ -103,7 +103,8 @@ const logoutUser = asyncHandler(async(req,res) => {
 
     const options = {
         httpOnly: true,
-        secure: true
+        secure: true,
+        sameSite: "none"
     }
 
     return res
@@ -152,8 +153,9 @@ const refreshSession = asyncHandler(async(req,res) => {
     await user.save({validateBeforeSave: false});
 
     const options = {
-        httpOnly: true, //Not accessible via client side script
-        secure: true
+        httpOnly: true,
+        secure: true,
+        sameSite: "none"
     }
 
     return res
