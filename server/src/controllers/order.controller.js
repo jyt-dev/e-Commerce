@@ -3,6 +3,7 @@ import { Order } from "../models/order.model.js";
 import { Payment } from "../models/payment.model.js";
 import { Cart } from "../models/cart.model.js";
 import { Product } from "../models/product.model.js";
+import { ProductImage } from "../models/productImage.model.js";
 import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
@@ -119,10 +120,36 @@ const getOrders = asyncHandler(async (req, res) => {
     const orderIds = orders.map(o => o._id);
     const payments = await Payment.find({ orderId: { $in: orderIds } }).lean();
 
+    // Fetch product images
+    const productIds = [];
+    orders.forEach(order => {
+        order.orderItems.forEach(item => {
+            if (item.productId && item.productId._id) {
+                productIds.push(item.productId._id);
+            }
+        });
+    });
+    const images = await ProductImage.find({ productId: { $in: productIds } }).lean();
+
     const ordersWithPayment = orders.map(order => {
         const payment = payments.find(p => p.orderId.toString() === order._id.toString());
+        
+        const mappedItems = order.orderItems.map(item => {
+            if (!item.productId) return item;
+            return {
+                ...item,
+                productId: {
+                    ...item.productId,
+                    images: images
+                        .filter(img => img.productId.toString() === item.productId._id.toString())
+                        .map(img => img.imageUrl)
+                }
+            };
+        });
+
         return {
             ...order,
+            orderItems: mappedItems,
             paymentStatus: payment ? payment.paymentStatus : "PENDING"
         };
     });
