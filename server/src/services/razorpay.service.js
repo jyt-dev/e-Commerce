@@ -23,4 +23,8 @@ export const fetchRazorpayPayment = async ({ paymentId }) => {
   return await razorpay.payments.fetch(paymentId);
 };
 
+export const validateWebhookSignature = (body, signature, secret) => {
+    return Razorpay.validateWebhookSignature(body, signature, secret);
+};
+
 export default razorpay;

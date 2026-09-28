@@ -7,7 +7,7 @@ import { ApiError } from "../utils/apiError.js";
 import { ApiResponse } from "../utils/apiResponse.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 
-import { createRazorpayOrder, verifyRazorpayPayment, fetchRazorpayPayment  } from "../services/razorpay.service.js";
+import { createRazorpayOrder, verifyRazorpayPayment, fetchRazorpayPayment, validateWebhookSignature } from "../services/razorpay.service.js";
 
 
 const createPaymentOrder = asyncHandler(async (req, res) => {
@@ -137,8 +137,7 @@ const verifyPayment = asyncHandler(async (req, res) => {
       );
     }
 
-    const razorpaypayment = fetchRazorpayPayment({razorpay_payment_id});
-
+    const razorpaypayment = await fetchRazorpayPayment({ paymentId: razorpay_payment_id });
     if (razorpaypayment.order_id !== payment.gatewayOrderId) {
       throw new ApiError(400, "Payment does not belong to this order");
     }
@@ -203,7 +202,74 @@ const verifyPayment = asyncHandler(async (req, res) => {
 });
 
 
+const razorpayWebhook = asyncHandler(async (req, res) => {
+    const signature = req.headers["x-razorpay-signature"];
+
+    if (!signature) {
+        throw new ApiError(400, "Missing Razorpay signature");
+    }
+
+    // Since express.json() is used globally, req.body is already an object.
+    // For validateWebhookSignature, we need the raw string body.
+    // In many setups JSON.stringify(req.body) works if keys aren't reordered.
+    // A better approach is to use a raw body middleware, but we will stringify for now.
+    const bodyString = JSON.stringify(req.body);
+
+    const secret = process.env.RAZORPAY_WEBHOOK_SECRET;
+
+    if (!secret) {
+        throw new ApiError(500, "Webhook secret not configured");
+    }
+
+    const isValid = validateWebhookSignature(bodyString, signature, secret);
+
+    if (!isValid) {
+        throw new ApiError(400, "Invalid webhook signature");
+    }
+
+    // Process the event
+    const event = req.body.event;
+
+    if (event === "payment.captured" || event === "order.paid") {
+        const paymentEntity = req.body.payload.payment.entity;
+        const razorpay_order_id = paymentEntity.order_id;
+        const razorpay_payment_id = paymentEntity.id;
+
+        const payment = await Payment.findOne({ gatewayOrderId: razorpay_order_id });
+
+        if (payment && payment.paymentStatus !== "SUCCESSFUL") {
+            const order = await Order.findOne({ _id: payment.orderId });
+
+            if (order) {
+                const session = await mongoose.startSession();
+                try {
+                    session.startTransaction();
+
+                    payment.gatewayPaymentId = razorpay_payment_id;
+                    payment.amountPaid = order.totalAmount;
+                    payment.paymentStatus = "SUCCESSFUL";
+                    await payment.save({ session });
+
+                    order.status = "CONFIRMED";
+                    await order.save({ session });
+
+                    await session.commitTransaction();
+                } catch (error) {
+                    await session.abortTransaction();
+                    console.error("Webhook transaction failed", error);
+                } finally {
+                    await session.endSession();
+                }
+            }
+        }
+    }
+
+    // Always return 200 OK to Razorpay so it doesn't retry
+    return res.status(200).json({ status: "ok" });
+});
+
 export {
     createPaymentOrder,
-    verifyPayment
+    verifyPayment,
+    razorpayWebhook
 };

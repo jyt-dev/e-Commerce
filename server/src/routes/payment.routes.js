@@ -2,12 +2,16 @@ import { Router } from "express";
 
 import {
     createPaymentOrder,
-    verifyPayment
+    verifyPayment,
+    razorpayWebhook
 } from "../controllers/payment.controller.js";
 
 import { verifyJWT } from "../middleware/auth.middleware.js";
 
 const router = Router();
+
+// Webhook endpoint (Must be accessible by Razorpay servers, so no JWT)
+router.post("/webhook", razorpayWebhook);
 
 router.use(verifyJWT);
 
