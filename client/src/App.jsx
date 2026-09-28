@@ -13,8 +13,15 @@ import ShoppingLayout from "./components/shopping/ShoppingLayout.jsx"
 import NotFound from "./pages/error/NotFound.jsx";
 import Home from "./pages/shopping/Home.jsx";
 import Products from "./pages/shopping/Products.jsx";
+import Cart from "./pages/shopping/Cart.jsx";
 import Checkout from "./pages/shopping/Checkout.jsx";
 import Account from "./pages/shopping/Account.jsx";
+import AccountProfile from "./pages/shopping/account/AccountProfile.jsx";
+import AccountAddresses from "./pages/shopping/account/AccountAddresses.jsx";
+import AccountOrders from "./pages/shopping/account/AccountOrders.jsx";
+import AccountSeller from "./pages/shopping/account/AccountSeller.jsx";
+import AccountPayments from "./pages/shopping/account/AccountPayments.jsx";
+import AccountReviews from "./pages/shopping/account/AccountReviews.jsx";
 import ProtectedRoute from "./components/common/ProtectedRoute.jsx";
 import UnAuthPage from "./pages/error/UnAuthPage.jsx";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +32,7 @@ import { SpinnerCustom } from "@/components/ui/spinner.jsx"
 import SellerLayout from "./components/seller/SellerLayout";
 import ProductSeller from "./pages/seller/ProductSeller.jsx"
 import ProductDetail from "./pages/shopping/ProductDetail.jsx";
+import SellerDashboard from "./pages/seller/SellerDashboard.jsx";
 
 function App() {
   const {user, isAuthenticated, isLoading} = useSelector((state) => state.auth)
@@ -51,6 +59,14 @@ function App() {
           <Route path="products" element={<Products />} />
           <Route path="product/:productId" element={<ProductDetail/>}/>
           <Route
+            path="cart"
+            element={
+              <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
+                <Cart />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="checkout"
             element={
               <ProtectedRoute isAuthenticated={isAuthenticated} user={user}>
@@ -66,7 +82,15 @@ function App() {
                 <Account />
               </ProtectedRoute>
             }
-          />
+          >
+            <Route index element={<Navigate to="profile" replace />} />
+            <Route path="profile" element={<AccountProfile />} />
+            <Route path="addresses" element={<AccountAddresses />} />
+            <Route path="orders" element={<AccountOrders />} />
+            <Route path="seller" element={<AccountSeller />} />
+            <Route path="payments" element={<AccountPayments />} />
+            <Route path="reviews" element={<AccountReviews />} />
+          </Route>
         </Route>
 
         <Route
@@ -108,7 +132,7 @@ function App() {
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="dashboard" element={<SellerDashboard />} />
           <Route path="features" element={<Features />} />
           <Route path="products" element={<ProductSeller />} />
           <Route path="orders" element={<Orders />} />

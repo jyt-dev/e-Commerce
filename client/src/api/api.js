@@ -3,7 +3,7 @@ import axios from "axios"
 // import { resetCredentials } from "@/features/auth/authSlice.js";
 
 const api = axios.create({
-  baseURL: "http://localhost:8000/api/v1",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1",
   withCredentials: true, // Automatically sends your HttpOnly cookies
   headers: {
     "Content-Type": "application/json",
@@ -30,7 +30,7 @@ api.interceptors.response.use(
             try {
                 //Use plain axios to bypass this interceptor configuration entirely
                 await axios.post(
-                    "http://localhost:8000/api/v1/auth/refresh",
+                    `${import.meta.env.VITE_API_URL || "http://localhost:8000/api/v1"}/auth/refresh`,
                     {},
                     { withCredentials: true } // Keeps cookies active for rotation
                 );
