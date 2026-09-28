@@ -113,11 +113,23 @@ const getOrders = asyncHandler(async (req, res) => {
     const orders = await Order.find({ customer })
         .populate("orderItems.productId", "name price")
         .populate("shippingAddress")
-        .sort({ createdAt: -1 });
+        .sort({ createdAt: -1 })
+        .lean();
+
+    const orderIds = orders.map(o => o._id);
+    const payments = await Payment.find({ orderId: { $in: orderIds } }).lean();
+
+    const ordersWithPayment = orders.map(order => {
+        const payment = payments.find(p => p.orderId.toString() === order._id.toString());
+        return {
+            ...order,
+            paymentStatus: payment ? payment.paymentStatus : "PENDING"
+        };
+    });
 
     return res
         .status(200)
-        .json(new ApiResponse(200, orders, "Orders fetched successfully"));
+        .json(new ApiResponse(200, ordersWithPayment, "Orders fetched successfully"));
 });
 
 const getOrder = asyncHandler(async (req, res) => {
